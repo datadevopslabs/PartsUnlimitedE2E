@@ -209,72 +209,6 @@
             }
         },
         {
-            "name": "[concat(parameters('PUL_HostingPlanName'), '-', resourceGroup().name)]",
-            "type": "Microsoft.Insights/autoscalesettings",
-            "location": "East US",
-            "apiVersion": "2014-04-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('PUL_HostingPlanName'))]"
-            ],
-            "tags": {
-                "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('PUL_HostingPlanName'))]": "Resource",
-                "displayName": "WebsiteHostingPlanAutoScale"
-            },
-            "properties": {
-                "name": "[concat(parameters('PUL_HostingPlanName'), '-', resourceGroup().name)]",
-                "profiles": [
-                    {
-                        "name": "Default",
-                        "capacity": {
-                            "minimum": "1",
-                            "maximum": "4",
-                            "default": "1"
-                        },
-                        "rules": [
-                            {
-                                "metricTrigger": {
-                                    "metricName": "CpuPercentage",
-                                    "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('PUL_HostingPlanName'))]",
-                                    "timeGrain": "PT1M",
-                                    "statistic": "Average",
-                                    "timeWindow": "PT10M",
-                                    "timeAggregation": "Average",
-                                    "operator": "GreaterThan",
-                                    "threshold": 80
-                                },
-                                "scaleAction": {
-                                    "direction": "Increase",
-                                    "type": "ChangeCount",
-                                    "value": "1",
-                                    "cooldown": "PT10M"
-                                }
-                            },
-                            {
-                                "metricTrigger": {
-                                    "metricName": "CpuPercentage",
-                                    "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('PUL_HostingPlanName'))]",
-                                    "timeGrain": "PT1M",
-                                    "statistic": "Average",
-                                    "timeWindow": "PT1H",
-                                    "timeAggregation": "Average",
-                                    "operator": "LessThan",
-                                    "threshold": 60
-                                },
-                                "scaleAction": {
-                                    "direction": "Decrease",
-                                    "type": "ChangeCount",
-                                    "value": "1",
-                                    "cooldown": "PT1H"
-                                }
-                            }
-                        ]
-                    }
-                ],
-                "enabled": "[parameters('EnableRules')]",
-                "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('PUL_HostingPlanName'))]"
-            }
-        },
-        {
             "name": "[parameters('WebSiteName')]",
             "type": "Microsoft.Web/sites",
             "dependsOn": [
@@ -315,9 +249,6 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', parameters('WebSiteName'))]"
                     ],
-                    "properties": {
-                        "Keys:ApplicationInsights:InstrumentationKey": "[reference(concat('Microsoft.Insights/components/', parameters('WebsiteName'), '-Insights')).InstrumentationKey]"
-                    }
                 },
                 {
                     "name": "slotconfignames",
@@ -325,11 +256,7 @@
                     "apiVersion": "2014-11-01",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/sites', parameters('WebSiteName'))]"
-                    ],
-                    "properties": {
-                        "connectionStringNames": [ "DefaultConnectionString" ],
-                        "appSettingNames": [ "keys:ApplicationInsights:InstrumentationKey" ]
-                    }
+                    ]
                 },
                 {
                     "name": "Dev",
@@ -362,10 +289,7 @@
                             "apiVersion": "2014-11-01",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites/slots', parameters('WebSiteName'), 'Dev')]"
-                            ],
-                            "properties": {
-                                "Keys:ApplicationInsights:InstrumentationKey": "[reference(concat('Microsoft.Insights/components/', parameters('WebsiteName'), '-DevInsights')).InstrumentationKey]"
-                            }
+                            ]
                         }
                     ]
                 },
@@ -401,9 +325,6 @@
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites/slots', parameters('WebSiteName'), 'Staging')]"
                             ],
-                            "properties": {
-                                "Keys:ApplicationInsights:InstrumentationKey": "[reference(concat('Microsoft.Insights/components/', parameters('WebsiteName'), '-StagingInsights')).InstrumentationKey]"
-                            }
                         }
                     ]
                 }
