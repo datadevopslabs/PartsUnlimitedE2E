@@ -193,42 +193,6 @@
             ]
         },
         {
-            "name": "[concat(parameters('WebsiteName'), '-Insights')]",
-            "type": "Microsoft.Insights/components",
-            "location": "eastus",
-            "apiVersion": "2014-04-01",
-            "tags": {
-                "displayName": "insightsComponents"
-            },
-            "properties": {
-                "ApplicationId": "[concat(parameters('WebsiteName'), '-Insights')]"
-            }
-        },
-        {
-            "name": "[concat(parameters('WebsiteName'), '-DevInsights')]",
-            "type": "Microsoft.Insights/components",
-            "location": "eastus",
-            "apiVersion": "2014-04-01",
-            "tags": {
-                "displayName": "insightsComponents"
-            },
-            "properties": {
-                "ApplicationId": "[concat(parameters('WebsiteName'), '-DevInsights')]"
-            }
-        },
-        {
-            "name": "[concat(parameters('WebsiteName'), '-StagingInsights')]",
-            "type": "Microsoft.Insights/components",
-            "location": "eastus",
-            "apiVersion": "2014-04-01",
-            "tags": {
-                "displayName": "insightsComponents"
-            },
-            "properties": {
-                "ApplicationId": "[concat(parameters('WebsiteName'), '-StagingInsights')]"
-            }
-        },
-        {
             "name": "[parameters('PUL_HostingPlanName')]",
             "type": "Microsoft.Web/serverfarms",
             "location": "[resourceGroup().location]",
@@ -385,10 +349,7 @@
                 "[resourceId('Microsoft.Web/serverfarms', parameters('PUL_HostingPlanName'))]",
                 "[resourceId('Microsoft.Sql/servers', variables('PartsUnlimitedServerName'))]",
                 "[resourceId('Microsoft.Sql/servers', variables('PartsUnlimitedServerNameDev'))]",
-                "[resourceId('Microsoft.Sql/servers', variables('PartsUnlimitedServerNameStage'))]",
-                "[resourceId('Microsoft.Insights/components', concat(parameters('WebsiteName'), '-Insights'))]",
-                "[resourceId('Microsoft.Insights/components', concat(parameters('WebSiteName'), '-DevInsights'))]",
-                "[resourceId('Microsoft.Insights/components', concat(parameters('WebSiteName'), '-StagingInsights'))]"
+                "[resourceId('Microsoft.Sql/servers', variables('PartsUnlimitedServerNameStage'))]"
             ],
             "location": "[resourceGroup().location]",
             "apiVersion": "2014-06-01",
