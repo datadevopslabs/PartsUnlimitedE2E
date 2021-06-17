@@ -102,21 +102,6 @@
             }
         },
         {
-            "name": "AppInsights",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2014-04-01-preview",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), '/', variables('appInsightsTemplateFile'), parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "WebsiteName": { "value": "[parameters('WebsiteName')]" }
-                }
-            }
-        },
-        {
             "name": "HostingPlan",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2014-04-01-preview",
@@ -140,8 +125,7 @@
             "apiVersion": "2014-04-01-preview",
             "dependsOn": [
                 "Microsoft.Resources/deployments/HostingPlan",
-                "Microsoft.Resources/deployments/SqlServerAndDb",
-                "Microsoft.Resources/deployments/AppInsights"
+                "Microsoft.Resources/deployments/SqlServerAndDb"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -154,25 +138,6 @@
                     "HostingPlanName": { "value": "[parameters('PartsUnlimitedHostingPlanName')]" },
                     "DatabaseConnectionString": { "value": "[reference('Microsoft.Resources/deployments/SqlServerAndDb').outputs.connectionString.value]" },
                     "AppInsightsKey": { "value": "[reference('Microsoft.Resources/deployments/AppInsights').outputs.instrumentationKey.value]" }
-                }
-            }
-        },
-        {
-            "name": "WebsiteRules",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2014-04-01-preview",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/Website"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[concat(parameters('_artifactsLocation'), '/', variables('websiteRulesTemplateFile'), parameters('_artifactsLocationSasToken'))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "WebsiteName": { "value": "[parameters('WebsiteName')]" },
-                    "EnableRules": { "value": "[parameters('EnableRules')]" }
                 }
             }
         }
